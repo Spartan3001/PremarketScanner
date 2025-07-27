@@ -81,7 +81,7 @@ def get_premarket_data():
 
                 if 1 <= price <= 25 and percent_change >= 5 and volume >= 100_000:
                     float_shares = get_stock_float(symbol)
-                    if float_shares is not None and float_shares <= 5_000_000:  # Ross prefers low float < 5M
+                    if float_shares is not None and float_shares <= 5_000_000:  # Low float preference
                         data.append({
                             "Symbol": symbol,
                             "Name": name,
@@ -142,35 +142,42 @@ def get_reason_for_move(ticker):
         return f"Error: {str(e)}", []
 
 # -----------------------------
-# 🚀 Streamlit App
+# 🚀 Main Streamlit App Logic
 # -----------------------------
-st.set_page_config(page_title="Momentum Gap Scanner", layout="wide")
-st.title("📈 Momentum Gap Scanner – Powered by AI")
+def main():
+    st.set_page_config(page_title="Momentum Gap Scanner", layout="wide")
+    st.title("📈 Momentum Gap Scanner – Built by Bill")
 
-if st.button("🔄 Refresh Premarket Data"):
-    st.rerun()
+    if st.button("🔄 Refresh Premarket Data"):
+        st.rerun()
 
-df, error = get_premarket_data()
+    df, error = get_premarket_data()
 
-if error:
-    st.error(error)
-elif df is not None and not df.empty:
-    st.success(f"✅ Found {len(df)} qualifying gappers")
+    if error:
+        st.error(error)
+    elif df is not None and not df.empty:
+        st.success(f"✅ Found {len(df)} qualifying gappers")
 
-    st.subheader("📊 Summary Table")
-    st.dataframe(df)
+        st.subheader("📊 Summary Table")
+        st.dataframe(df)
 
-    st.subheader("Top Gappers with Reason for Move")
-    for i, row in df.iterrows():
-        with st.expander(f"🔎 {row['Symbol']} | {row['Name']} | {row['% Change']}%"):
-            st.write(f"💵 Price: ${row['Price']}")
-            st.write(f"📊 Volume: {row['Volume']:,}")
-            st.write(f"🧮 Float: {row['Float']:,}")
-            reason, headlines = get_reason_for_move(row['Symbol'])
-            st.write(f"📢 Reason for Move: {reason}")
-            if headlines:
-                st.markdown("**📰 Latest Headlines:**")
-                for h in headlines:
-                    st.write(f"- {h}")
-else:
-    st.warning("No stocks met the criteria today.")
+        st.subheader("📌 Top Gappers with Reason for Move")
+        for i, row in df.iterrows():
+            with st.expander(f"🔎 {row['Symbol']} | {row['Name']} | {row['% Change']}%"):
+                st.write(f"💵 Price: ${row['Price']}")
+                st.write(f"📊 Volume: {row['Volume']:,}")
+                st.write(f"🧮 Float: {row['Float']:,}")
+                reason, headlines = get_reason_for_move(row['Symbol'])
+                st.write(f"📢 Reason for Move: {reason}")
+                if headlines:
+                    st.markdown("**📰 Latest Headlines:**")
+                    for h in headlines:
+                        st.write(f"- {h}")
+    else:
+        st.warning("No stocks met the criteria today.")
+
+# -----------------------------
+# ⏱ Run the app
+# -----------------------------
+if __name__ == "__main__":
+    main()
