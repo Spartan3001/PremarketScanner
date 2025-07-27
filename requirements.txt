@@ -65,7 +65,7 @@ namex==0.0.8
 narwhals==1.17.0
 nest-asyncio==1.6.0
 networkx==3.4.2
-numpy==1.26.4
+numpy>=1.26.4,<2.0
 opencv-contrib-python==4.11.0.86
 opencv-python==4.11.0.86
 opencv-python-headless==4.11.0.86
