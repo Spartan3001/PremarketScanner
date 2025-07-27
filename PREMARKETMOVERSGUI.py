@@ -144,8 +144,8 @@ def get_reason_for_move(ticker):
 # -----------------------------
 # 🚀 Streamlit App
 # -----------------------------
-st.set_page_config(page_title="Ross Cameron-Style Premarket Scanner", layout="wide")
-st.title("📈 Ross Cameron-Style Premarket Scanner")
+st.set_page_config(page_title="Momentum Gap Scanner", layout="wide")
+st.title("📈 Momentum Gap Scanner – Powered by AI")
 
 if st.button("🔄 Refresh Premarket Data"):
     st.rerun()
